@@ -1,0 +1,66 @@
+### 改这一行就能切换环境（IDEA 的变量语法）
+@host = http://localhost:8080
+
+
+########################  一、设备查询  ########################
+
+### 1. 查存在的设备  → 期望 200 + JSON
+GET {{host}}/api/equipment/EQ-A001
+
+### 2. 查不存在的设备  → 期望 404
+GET {{host}}/api/equipment/EQ-999
+
+
+########################  二、建单（POST）  ########################
+
+### 3. 合法建单
+###    现在：200 + 回声；第 4 课做完后：201 + Location + 服务器生成的 id/status/created_at
+POST {{host}}/api/repair-orders
+Content-Type: application/json
+
+{
+  "equipment_code": "EQ-A001",
+  "site_id": "SITE-A",
+  "issue_summary": "状态页出现黄灯",
+  "priority": "NORMAL"
+}
+
+### 4. equipment_code 传空串  → 期望 400（被 @NotBlank 拦下）
+POST {{host}}/api/repair-orders
+Content-Type: application/json
+
+{
+  "equipment_code": "",
+  "site_id": "SITE-A",
+  "issue_summary": "状态页出现黄灯",
+  "priority": "NORMAL"
+}
+
+### 5. priority 不在枚举里  → 期望 400（被 Jackson 拦下）
+POST {{host}}/api/repair-orders
+Content-Type: application/json
+
+{
+  "equipment_code": "EQ-A001",
+  "site_id": "SITE-A",
+  "issue_summary": "状态页出现黄灯",
+  "priority": "URGENT"
+}
+
+### 6. JSON 语法坏（多了个逗号）→ 期望 400
+POST {{host}}/api/repair-orders
+Content-Type: application/json
+
+{
+  "equipment_code": "EQ-A001",
+}
+
+
+########################  三、按 ID 查工单  ########################
+
+### 7. 查刚建出来的那张工单
+###    把 RO-1002 换成你上一步实际拿到的号 → 期望 200 + JSON
+GET {{host}}/api/repair-orders/RO-1002
+
+### 8. 查一个不存在的工单号 → 期望 404
+GET {{host}}/api/repair-orders/RO-9999

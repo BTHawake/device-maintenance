@@ -19,7 +19,7 @@ public class Equipment {
     }
 
     public void setCode(String code) {
-        if(code==null || code.isBlank())
+        if (code == null || code.isBlank())
             throw new IllegalArgumentException("编号不能为空");
         this.code = code;
     }
@@ -29,7 +29,7 @@ public class Equipment {
     }
 
     public void setModel(String model) {
-        if(model==null||model.isBlank())
+        if (model == null || model.isBlank())
             throw new IllegalArgumentException("模型不能为空");
         this.model = model;
     }
@@ -39,24 +39,22 @@ public class Equipment {
     }
 
     public void setState(String state) {
-        if(state==null||state.isBlank())
+        if (state == null || state.isBlank())
             throw new IllegalArgumentException("状态不能为空");
         this.state = state;
     }
 
     @Override
     public String toString() {
-        return code+","+model+","+state;
+        return code + "," + model + "," + state;
     }
 
-    public void archive(){
-        if(Objects.equals(this.state, "ACTIVE"))
-        {
+    public void archive() {
+        if (Objects.equals(this.state, "ACTIVE")) {
             setState("ARCHIVED");
-        }else if(Objects.equals(this.state,"ARCHIVED"))
-        {
+        } else if (Objects.equals(this.state, "ARCHIVED")) {
             throw new IllegalStateException("设备已归档，不能重复归档");
-        }else{
+        } else {
             throw new IllegalStateException("设备未激活");
         }
 

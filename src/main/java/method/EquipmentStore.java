@@ -7,7 +7,7 @@ import java.util.Map;
 import java.util.Optional;
 
 public class EquipmentStore {
-    private Map<String, Equipment> store = new HashMap<>();
+    private final Map<String, Equipment> store = new HashMap<>();
 
     public void add(Equipment e) {
         store.put(e.getCode(), e);
