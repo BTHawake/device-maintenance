@@ -1,6 +1,7 @@
 package method.controller;
 
 import jakarta.validation.Valid;
+import method.EquipmentStore;
 import method.dto.RepairOrderRequest;
 import method.dto.RepairOrderResponse;
 import org.springframework.http.HttpStatus;
@@ -18,11 +19,20 @@ public class RepairOrderController {
     private static final DateTimeFormatter FMT =
             DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
     private final Map<String, RepairOrderResponse> store = new HashMap<>();
+    private final EquipmentStore equipmentStore;
     private int countId = 1001;
+
+    public RepairOrderController(EquipmentStore equipmentStore) {
+        this.equipmentStore = equipmentStore;
+    }
 
     //建单
     @PostMapping("/api/repair-orders")
     public ResponseEntity<RepairOrderResponse> addRepairOrdersRequest(@Valid @RequestBody RepairOrderRequest request) {
+
+        if (equipmentStore.findByCode(request.equipment_code()).isEmpty()) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "设备不存在: " + request.equipment_code());
+        }
 
         String id = "RO-" + countId++;
 
@@ -45,6 +55,9 @@ public class RepairOrderController {
         }
         return order;
     }
+
+
+
 
 }
 /*

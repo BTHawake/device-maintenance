@@ -14,13 +14,10 @@ import java.util.Optional;
 
 @RestController
 public class EquipmentController {
-    private final EquipmentStore store = new EquipmentStore();
+    private final EquipmentStore store ;
 
-    public EquipmentController() {
-        Equipment e1 = new Equipment("EQ-A001", "SIM-P100", "ACTIVE");
-        Equipment e2 = new Equipment("EQ-A002", "SIM-P100", "ACTIVE");
-        store.add(e1);
-        store.add(e2);
+    public EquipmentController(EquipmentStore store) {
+        this.store=store;
     }
 
     @GetMapping("/api/equipment/{id}")

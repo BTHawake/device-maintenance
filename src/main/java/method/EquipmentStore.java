@@ -1,11 +1,13 @@
 package method;
 
+import org.springframework.stereotype.Component;
+
 import java.security.KeyPair;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
-
+@Component
 public class EquipmentStore {
     private final Map<String, Equipment> store = new HashMap<>();
 
@@ -25,6 +27,10 @@ public class EquipmentStore {
             Equipment e = new Equipment(parts[0], parts[1], parts[2]);
             add(e);
         }
+    }
+    public EquipmentStore() {
+        add(new Equipment("EQ-A001", "SIM-P100", "ACTIVE"));
+        add(new Equipment("EQ-A002", "SIM-P100", "ACTIVE"));
     }
 
 
