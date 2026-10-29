@@ -19,7 +19,7 @@ public class EquipmentController {
     public EquipmentController(EquipmentStore store) {
         this.store=store;
     }
-
+    //给路由
     @GetMapping("/api/equipment/{id}")
     public Equipment getEquipment(@PathVariable String id) {
         Optional<Equipment> e = store.findByCode(id);

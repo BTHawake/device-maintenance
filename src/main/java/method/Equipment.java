@@ -6,13 +6,24 @@ public class Equipment {
     private String code;
     private String model;
     private String state;
+    private Long id;
 
+    public Equipment(Long id, String code, String model, String state) {
+        this.id=id;
+        setCode(code);
+        setModel(model);
+        setState(state);
+    }
     public Equipment(String code, String model, String state) {
         setCode(code);
         setModel(model);
         setState(state);
     }
 
+
+    public Long getId() {
+        return id;
+    }
 
     public String getCode() {
         return code;
