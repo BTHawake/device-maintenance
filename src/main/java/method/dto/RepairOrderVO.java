@@ -1,0 +1,17 @@
+package method.dto;
+
+import lombok.Data;
+
+import java.time.LocalDateTime;
+
+//	装一页里的一行
+@Data
+public class RepairOrderVO {
+    private String id;
+    private String equipmentCode;      // 来自 JOIN 的 e.code
+    private String siteId;
+    private String issueSummary;
+    private String priority;
+    private String status;
+    private LocalDateTime createdAt;
+}

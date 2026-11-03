@@ -7,6 +7,9 @@
 ### 1. 查存在的设备  → 期望 200 + JSON
 GET {{host}}/api/equipment/EQ-A001
 
+###
+GET {{host}}/api/equipment/EQ-A003
+
 ### 2. 查不存在的设备  → 期望 404
 GET {{host}}/api/equipment/EQ-999
 
@@ -14,7 +17,7 @@ GET {{host}}/api/equipment/EQ-999
 ########################  二、建单（POST）  ########################
 
 ### 3. 合法建单
-###    现在：200 + 回声；第 4 课做完后：201 + Location + 服务器生成的 id/status/created_at
+###    201 + Location + 服务器生成的 id/status/created_at
 POST {{host}}/api/repair-orders
 Content-Type: application/json
 

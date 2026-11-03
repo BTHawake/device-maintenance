@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="method.mapper.RepairOrderMapper">
+
+    <select id="selectPageView" resultType="method.dto.RepairOrderVO">
+        SELECT o.id,
+               e.code        AS equipment_code,
+               o.site_id,
+               o.issue_summary,
+               o.priority,
+               o.status,
+               o.created_at
+        FROM repair_order o
+                 LEFT JOIN equipment e ON e.id = o.equipment_id
+        <where>
+            <if test="status != null and status != ''">
+                AND o.status = #{status}
+            </if>
+            <if test="equipmentCode != null and equipmentCode != ''">
+                AND e.code = #{equipmentCode}
+            </if>
+        </where>
+
+        ORDER BY o.created_at DESC, o.id DESC
+
+    </select>
+
+</mapper>

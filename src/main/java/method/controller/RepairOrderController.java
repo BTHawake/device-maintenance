@@ -2,8 +2,11 @@ package method.controller;
 
 import jakarta.validation.Valid;
 import method.EquipmentStore;
+import method.dto.PageResult;
 import method.dto.RepairOrderRequest;
 import method.dto.RepairOrderResponse;
+import method.dto.RepairOrderVO;
+import method.service.RepairOrderService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -19,11 +22,12 @@ public class RepairOrderController {
     private static final DateTimeFormatter FMT =
             DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
     private final Map<String, RepairOrderResponse> store = new HashMap<>();
-    private final EquipmentStore equipmentStore;
+    private final EquipmentStore equipmentStore = new EquipmentStore();
     private int countId = 1001;
+    private final RepairOrderService repairOrderService;
 
-    public RepairOrderController(EquipmentStore equipmentStore) {
-        this.equipmentStore = equipmentStore;
+    public RepairOrderController(RepairOrderService repairOrderService) {
+        this.repairOrderService = repairOrderService;
     }
 
     //建单
@@ -56,7 +60,15 @@ public class RepairOrderController {
         return order;
     }
 
-
+    //
+    @GetMapping("/api/repair-orders")
+    public PageResult<RepairOrderVO> list(
+            @RequestParam(defaultValue = "1") long page,
+            @RequestParam(defaultValue = "10") long size,
+            @RequestParam(required = false) String status,
+            @RequestParam(required = false) String equipmentCode) {
+        return repairOrderService.page(page, size, status, equipmentCode);
+    }
 
 
 }
