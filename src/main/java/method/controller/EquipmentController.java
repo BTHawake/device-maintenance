@@ -1,6 +1,6 @@
 package method.controller;
 
-import method.Equipment;
+import method.entity.Equipment;
 import method.mapper.EquipmentMapper;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.GetMapping;

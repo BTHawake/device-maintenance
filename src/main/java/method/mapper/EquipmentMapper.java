@@ -1,6 +1,6 @@
 package method.mapper;
 
-import method.Equipment;
+import method.entity.Equipment;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Select;
 
@@ -16,4 +16,6 @@ public interface EquipmentMapper
     @Select("SELECT id, code, model, state FROM equipment WHERE code = #{code}")
     Optional<Equipment> findByCode(String code);
 
+    @Select("SELECT id, code, model, state FROM equipment WHERE id = #{id}")
+    Optional<Equipment> findById(Long id);
 }

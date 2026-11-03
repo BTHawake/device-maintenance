@@ -4,7 +4,7 @@ import lombok.Data;
 
 import java.time.LocalDateTime;
 
-//	装一页里的一行
+//	装一页里的一行，把两个表拼接为返回前端用来看的请求体
 @Data
 public class RepairOrderVO {
     private String id;
