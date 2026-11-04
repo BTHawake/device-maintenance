@@ -1,8 +1,9 @@
-package method.controller;
+package com.awake.repair.controller;
 
+import com.awake.repair.dto.*;
 import jakarta.validation.Valid;
-import method.dto.*;
-import method.service.RepairOrderService;
+import com.awake.repair.dto.*;
+import com.awake.repair.service.RepairOrderService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;

@@ -1,4 +1,4 @@
-package method.dto;
+package com.awake.repair.dto;
 
 import lombok.Data;
 

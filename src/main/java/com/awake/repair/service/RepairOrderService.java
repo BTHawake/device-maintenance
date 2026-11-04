@@ -1,15 +1,16 @@
-package method.service;
+package com.awake.repair.service;
 
+import com.awake.repair.dto.*;
 import com.baomidou.mybatisplus.core.conditions.update.LambdaUpdateWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.core.toolkit.IdWorker;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import lombok.RequiredArgsConstructor;
-import method.dto.*;
-import method.entity.Equipment;
-import method.entity.RepairOrder;
-import method.mapper.EquipmentMapper;
-import method.mapper.RepairOrderMapper;
+import com.awake.repair.dto.*;
+import com.awake.repair.entity.Equipment;
+import com.awake.repair.entity.RepairOrder;
+import com.awake.repair.mapper.EquipmentMapper;
+import com.awake.repair.mapper.RepairOrderMapper;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;

@@ -1,6 +1,5 @@
-package method.entity;
+package com.awake.repair.entity;
 
-import lombok.AllArgsConstructor;
 import lombok.Data;
 
 @Data

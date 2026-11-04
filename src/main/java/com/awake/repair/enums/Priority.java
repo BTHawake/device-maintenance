@@ -1,4 +1,4 @@
-package method;
+package com.awake.repair.enums;
 
 public enum Priority {
      LOW,

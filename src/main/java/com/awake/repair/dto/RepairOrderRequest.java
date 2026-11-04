@@ -1,9 +1,9 @@
-package method.dto;
+package com.awake.repair.dto;
 
 import jakarta.validation.constraints.NotBlank;
 
 import jakarta.validation.constraints.NotNull;
-import method.Priority;
+import com.awake.repair.enums.Priority;
 
 
 public record RepairOrderRequest(

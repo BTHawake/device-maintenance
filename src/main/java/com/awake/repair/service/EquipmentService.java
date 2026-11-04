@@ -1,10 +1,9 @@
-package method.service;
+package com.awake.repair.service;
 
 import lombok.RequiredArgsConstructor;
-import method.entity.Equipment;
-import method.mapper.EquipmentMapper;
+import com.awake.repair.entity.Equipment;
+import com.awake.repair.mapper.EquipmentMapper;
 import org.springframework.stereotype.Service;
-import org.springframework.web.server.ResponseStatusException;
 
 import java.util.Optional;
 

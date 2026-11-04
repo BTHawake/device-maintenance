@@ -1,7 +1,7 @@
-package method.controller;
+package com.awake.repair.controller;
 
-import method.entity.Equipment;
-import method.mapper.EquipmentMapper;
+import com.awake.repair.entity.Equipment;
+import com.awake.repair.mapper.EquipmentMapper;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;

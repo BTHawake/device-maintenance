@@ -1,9 +1,9 @@
-package method.mapper;
+package com.awake.repair.mapper;
 
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
-import method.dto.RepairOrderVO;
-import method.entity.RepairOrder;
+import com.awake.repair.dto.RepairOrderVO;
+import com.awake.repair.entity.RepairOrder;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 

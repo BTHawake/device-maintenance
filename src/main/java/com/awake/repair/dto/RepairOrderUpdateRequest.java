@@ -1,6 +1,6 @@
-package method.dto;
+package com.awake.repair.dto;
 
-import method.Priority;
+import com.awake.repair.enums.Priority;
 
 public record RepairOrderUpdateRequest(
         String status,

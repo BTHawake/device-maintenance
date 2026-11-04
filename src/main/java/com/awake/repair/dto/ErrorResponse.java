@@ -1,4 +1,4 @@
-package method.dto;
+package com.awake.repair.dto;
 
 //统一响应体
 public record ErrorResponse(

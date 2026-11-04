@@ -2,9 +2,9 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
-<mapper namespace="method.mapper.RepairOrderMapper">
+<mapper namespace="com.awake.repair.mapper.RepairOrderMapper">
 
-    <select id="selectPageView" resultType="method.dto.RepairOrderVO">
+    <select id="selectPageView" resultType="com.awake.repair.dto.RepairOrderVO">
         SELECT o.id,
                e.code        AS equipment_code,
                o.site_id,

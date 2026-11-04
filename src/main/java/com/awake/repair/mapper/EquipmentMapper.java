@@ -1,6 +1,6 @@
-package method.mapper;
+package com.awake.repair.mapper;
 
-import method.entity.Equipment;
+import com.awake.repair.entity.Equipment;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Select;
 

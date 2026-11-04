@@ -1,8 +1,8 @@
-package method.config;
+package com.awake.repair.config;
 
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.extern.slf4j.Slf4j;
-import method.dto.ErrorResponse;
+import com.awake.repair.dto.ErrorResponse;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.converter.HttpMessageNotReadableException;
