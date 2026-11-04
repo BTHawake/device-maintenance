@@ -22,7 +22,7 @@
                 AND e.code = #{equipmentCode}
             </if>
         </where>
-
+        WHERE o.deleted = 0
         ORDER BY o.created_at DESC, o.id DESC
 
     </select>

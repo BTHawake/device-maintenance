@@ -1,13 +1,11 @@
 package method.service;
 
+import com.baomidou.mybatisplus.core.conditions.update.LambdaUpdateWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.core.toolkit.IdWorker;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import lombok.RequiredArgsConstructor;
-import method.dto.PageResult;
-import method.dto.RepairOrderRequest;
-import method.dto.RepairOrderResponse;
-import method.dto.RepairOrderVO;
+import method.dto.*;
 import method.entity.Equipment;
 import method.entity.RepairOrder;
 import method.mapper.EquipmentMapper;
@@ -22,12 +20,13 @@ import java.util.Optional;
 import java.util.Set;
 
 @Service
-@RequiredArgsConstructor //Lombok 的注解，给所有 final 字段生成构造方法。
+@RequiredArgsConstructor // final 且没赋初值的字段，以及所有标了 @NonNull 的 字段生成构造方法。
 public class RepairOrderService {
     private static final DateTimeFormatter FMT =
             DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
     private static final long MAX_SIZE = 100;
     private static final Set<String> ALLOWED_STATUS = Set.of("OPEN", "RESOLVED");
+
     private final RepairOrderMapper repairOrderMapper;
     private final EquipmentMapper equipmentMapper;
 
@@ -54,9 +53,10 @@ public class RepairOrderService {
 
     public RepairOrderResponse create(RepairOrderRequest request) {
         Equipment eq = equipmentMapper.findByCode(request.equipment_code())
-                .orElseThrow(() -> new IllegalArgumentException("设备不存在: " + request.equipment_code()));
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "设备不存在: " + request.equipment_code()));
 
         RepairOrder order = new RepairOrder();
+
         order.setId("RO-" + IdWorker.getIdStr());
         order.setEquipmentId(eq.getId());
         order.setSiteId(request.site_id());
@@ -71,24 +71,51 @@ public class RepairOrderService {
     }
 
     public RepairOrderResponse findById(String id) {
-        RepairOrder order = repairOrderMapper.selectById(id);
-        if (order == null) {                                          // ← 补上判空
+        RepairOrder order = Optional.ofNullable(repairOrderMapper.selectById(id))
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "工单不存在: " + id));
+
+
+        return toResponse(order, equipmentCodeOf(order.getEquipmentId()));
+    }
+
+
+    public void deleteById(String id) {
+        int affected = repairOrderMapper.deleteById(id);
+        if (affected == 0)
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, "工单不存在: " + id);
+    }
+
+    public RepairOrderResponse update(String id, RepairOrderUpdateRequest req) {
+        RepairOrder order = Optional.ofNullable(repairOrderMapper.selectById(id)).orElseThrow(
+                () -> new ResponseStatusException(HttpStatus.NOT_FOUND, "工单不存在: " + id)
+        );
+        if (req.status() != null && !ALLOWED_STATUS.contains(req.status())) {
+            throw new IllegalArgumentException("状态只能是 " + ALLOWED_STATUS);
         }
-        String code = equipmentMapper.findById(order.getEquipmentId())
+        LambdaUpdateWrapper<RepairOrder> wrapper = new LambdaUpdateWrapper<RepairOrder>()
+                .eq(RepairOrder::getId, id)
+                .set(req.status() != null, RepairOrder::getStatus, req.status())
+                .set(req.priority() != null, RepairOrder::getPriority, req.priority() != null ? req.priority().name() : null)
+                .set(req.issueSummary() != null, RepairOrder::getIssueSummary, req.issueSummary());
+        repairOrderMapper.update(null, wrapper);
+        RepairOrder fresh = repairOrderMapper.selectById(id);
+        return toResponse(fresh, equipmentCodeOf(order.getEquipmentId()));
+    }
+
+
+    private String equipmentCodeOf(Long equipmentId) {
+        return equipmentMapper.findById(equipmentId)
                 .map(Equipment::getCode)
                 .orElse(null);
-        return toResponse(order, code);
     }
+
     private RepairOrderResponse toResponse(RepairOrder order, String equipmentCode) {
         return new RepairOrderResponse(
                 order.getId(),
                 equipmentCode,
-                order.getStatus(),                        // ← 不再写死 "OPEN"
-                order.getPriority(),                      // ← 不再错位
-                order.getCreatedAt().format(FMT)          // ← 不再用 now()
+                order.getStatus(),
+                order.getPriority(),
+                order.getCreatedAt().format(FMT)
         );
     }
-
-
 }

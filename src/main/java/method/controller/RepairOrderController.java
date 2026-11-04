@@ -1,17 +1,11 @@
 package method.controller;
 
 import jakarta.validation.Valid;
-import method.dto.PageResult;
-import method.dto.RepairOrderRequest;
-import method.dto.RepairOrderResponse;
-import method.dto.RepairOrderVO;
+import method.dto.*;
 import method.service.RepairOrderService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.server.ResponseStatusException;
-
-import java.time.format.DateTimeFormatter;
 
 @RestController
 public class RepairOrderController {
@@ -48,6 +42,17 @@ public class RepairOrderController {
             @RequestParam(required = false) String status,
             @RequestParam(required = false) String equipmentCode) {
         return repairOrderService.page(page, size, status, equipmentCode);
+    }
+
+    @DeleteMapping("/api/repair-orders/{id}")
+    public ResponseEntity<Void> delete(@PathVariable String id) {
+        repairOrderService.deleteById(id);
+        return ResponseEntity.noContent().build();
+    }
+
+    @PatchMapping("/api/repair-orders/{id}")
+    public RepairOrderResponse update(@PathVariable String id, @RequestBody RepairOrderUpdateRequest req) {
+        return repairOrderService.update(id, req);
     }
 
 

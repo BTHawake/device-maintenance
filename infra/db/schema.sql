@@ -30,3 +30,5 @@ CREATE TABLE repair_order
     CONSTRAINT fk_order_equipment FOREIGN KEY (equipment_id) REFERENCES equipment(id)
 );
 CREATE INDEX idx_order_equipment ON repair_order (equipment_id);
+ALTER TABLE repair_order
+    ADD COLUMN deleted TINYINT NOT NULL DEFAULT 0 COMMENT '0未删除 1已删除';
