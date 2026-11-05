@@ -20,7 +20,6 @@ public class RepairOrderController {
     //建单
     @PostMapping("/api/repair-orders")
     public ResponseEntity<RepairOrderResponse> addRepairOrdersRequest(@Valid @RequestBody RepairOrderRequest request) {
-
         RepairOrderResponse body = repairOrderService.create(request);
         return ResponseEntity                                      // ← ⑦
                 .status(HttpStatus.CREATED)
@@ -31,7 +30,6 @@ public class RepairOrderController {
     //按照id查单
     @GetMapping("/api/repair-orders/{id}")
     public RepairOrderResponse get(@PathVariable String id) {
-
         return repairOrderService.findById(id);
     }
 
@@ -52,7 +50,7 @@ public class RepairOrderController {
     }
 
     @PatchMapping("/api/repair-orders/{id}")
-    public RepairOrderResponse update(@PathVariable String id, @RequestBody RepairOrderUpdateRequest req) {
+    public RepairOrderResponse update(@PathVariable String id,@Valid @RequestBody RepairOrderUpdateRequest req) {
         return repairOrderService.update(id, req);
     }
 

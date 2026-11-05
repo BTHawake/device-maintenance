@@ -64,11 +64,11 @@ public class RepairOrderService {
         order.setIssueSummary(request.issue_summary());
         order.setPriority(request.priority().name());
         order.setStatus("OPEN");
-        order.setCreatedAt(LocalDateTime.now());      // ← 只调一次（原来调了两次，可能差几毫秒）
+        order.setCreatedAt(LocalDateTime.now());      // 只调一次（原来调了两次，可能差几毫秒）
 
         repairOrderMapper.insert(order);
 
-        return toResponse(order, eq.getCode());       // ← 复用
+        return toResponse(order, eq.getCode());       // 复用
     }
 
     public RepairOrderResponse findById(String id) {

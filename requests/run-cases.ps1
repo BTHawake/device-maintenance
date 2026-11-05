@@ -92,6 +92,59 @@ $rows += [pscustomobject]@{ Id = 9; Input = 'POST 不传 priority'; Expect = '40
 $r = Invoke-Case POST '/api/repair-orders' $bNoEq
 $rows += [pscustomobject]@{ Id = 10; Input = 'POST equipment_code="EQ-XXX"'; Expect = '404'; Code = $r.Code; Body = (Shorten $r.Body) }
 
+""
+"（生成时间：$(Get-Date -Format 'yyyy-MM-dd HH:mm:ss')，目标：$Base）"
+# ---- W02 新增的请求体 ----
+$bPatchStatus  = New-Body 'patchStatus'  '{"status":"RESOLVED"}'
+$bPatchBadStat = New-Body 'patchBadStat' '{"status":"XXX"}'
+$bPatchPri     = New-Body 'patchPri'     '{"priority":"HIGH"}'
+
+# ---- W02 新增的用例 ----
+
+# 11 分页正常
+$r = Invoke-Case GET '/api/repair-orders?page=1&size=2'
+$rows += [pscustomobject]@{ Id = 11; Input = 'GET 分页 page=1&size=2'; Expect = '200'; Code = $r.Code; Body = (Shorten $r.Body) }
+
+# 12 错误页码（类型转换）
+$r = Invoke-Case GET '/api/repair-orders?page=abc'
+$rows += [pscustomobject]@{ Id = 12; Input = 'GET page=abc'; Expect = '400'; Code = $r.Code; Body = (Shorten $r.Body) }
+
+# 13 超大 size（应被夹到 100，返回 200）
+$r = Invoke-Case GET '/api/repair-orders?page=1&size=1000000'
+$rows += [pscustomobject]@{ Id = 13; Input = 'GET size=1000000'; Expect = '200'; Code = $r.Code; Body = (Shorten $r.Body) }
+
+# 14 越界页码（空页 + total 不变）
+$r = Invoke-Case GET '/api/repair-orders?page=99&size=2'
+$rows += [pscustomobject]@{ Id = 14; Input = 'GET page=99'; Expect = '200'; Code = $r.Code; Body = (Shorten $r.Body) }
+
+# 15 非法 status 过滤（业务白名单）
+$r = Invoke-Case GET '/api/repair-orders?status=XXX'
+$rows += [pscustomobject]@{ Id = 15; Input = 'GET status=XXX'; Expect = '400'; Code = $r.Code; Body = (Shorten $r.Body) }
+
+# 16 PATCH 合法
+$r = Invoke-Case PATCH "/api/repair-orders/$knownId" $bPatchStatus
+$rows += [pscustomobject]@{ Id = 16; Input = 'PATCH 合法改 status'; Expect = '200'; Code = $r.Code; Body = (Shorten $r.Body) }
+
+# 17 PATCH 非法 status
+$r = Invoke-Case PATCH "/api/repair-orders/$knownId" $bPatchBadStat
+$rows += [pscustomobject]@{ Id = 17; Input = 'PATCH status=XXX'; Expect = '400'; Code = $r.Code; Body = (Shorten $r.Body) }
+
+# 18 PATCH 不存在的单
+$r = Invoke-Case PATCH '/api/repair-orders/RO-NOPE' $bPatchPri
+$rows += [pscustomobject]@{ Id = 18; Input = 'PATCH 不存在的工单'; Expect = '404'; Code = $r.Code; Body = (Shorten $r.Body) }
+
+# 19 DELETE 存在的单
+$r = Invoke-Case DELETE "/api/repair-orders/$knownId"
+$rows += [pscustomobject]@{ Id = 19; Input = 'DELETE 刚建的单'; Expect = '204'; Code = $r.Code; Body = (Shorten $r.Body) }
+
+# 20 删完再查（逻辑删除生效）
+$r = Invoke-Case GET "/api/repair-orders/$knownId"
+$rows += [pscustomobject]@{ Id = 20; Input = 'GET 已软删除的单'; Expect = '404'; Code = $r.Code; Body = (Shorten $r.Body) }
+
+# 21 再删一次
+$r = Invoke-Case DELETE "/api/repair-orders/$knownId"
+$rows += [pscustomobject]@{ Id = 21; Input = 'DELETE 再删一次'; Expect = '404'; Code = $r.Code; Body = (Shorten $r.Body) }
+
 # ---- 输出 markdown ----
 "| # | 输入 | 期望 | 实际状态码 | 实际响应(截断) | 结论 |"
 "|---|---|---|---|---|---|"
@@ -104,5 +157,3 @@ foreach ($row in $rows) {
     "| $($row.Id) | $($row.Input) | $($row.Expect) | $($row.Code) | $bodyCell | $verdict |"
 }
 
-""
-"（生成时间：$(Get-Date -Format 'yyyy-MM-dd HH:mm:ss')，目标：$Base）"
